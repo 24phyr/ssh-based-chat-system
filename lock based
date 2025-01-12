@@ -1,0 +1,45 @@
+// Bounded Buffer using Locks and Condition Variables
+
+class BoundedBuffer {
+    int[] buffer;
+    int size;
+    int in = 0, out = 0;
+    int count = 0;
+
+    Lock bufferLock;
+    Condition notFull;
+    Condition notEmpty;
+
+    constructor(int bufferSize) {
+        size = bufferSize;
+        buffer = new int[size];
+        bufferLock = new Lock();
+        notFull = new Condition();
+        notEmpty = new Condition();
+    }
+
+    procedure produce(int item) {
+        bufferLock.acquire();
+        while (count == size) {
+            notFull.wait(bufferLock);
+        }
+        buffer[in] = item;
+        in = (in + 1) % size;
+        count++;
+        notEmpty.signal();
+        bufferLock.release();
+    }
+
+    function consume() returns int {
+        bufferLock.acquire();
+        while (count == 0) {
+            notEmpty.wait(bufferLock);
+        }
+        int item = buffer[out];
+        out = (out + 1) % size;
+        count--;
+        notFull.signal();
+        bufferLock.release();
+        return item;
+    }
+}
