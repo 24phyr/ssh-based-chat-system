@@ -1,4 +1,4 @@
-!#/bin/bash
+#!/bin/bash
 
 SERVER_IP="localhost"
 CHAT_DIR="/var/chat_system"
