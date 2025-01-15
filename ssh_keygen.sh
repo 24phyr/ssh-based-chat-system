@@ -1,4 +1,4 @@
-!#/bin/bash
+#!/bin/bash
 
 generate_ssh_key() {
   echo "Generating SSH key for $(whoami)"
